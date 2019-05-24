@@ -67,16 +67,6 @@ const sortByGivenCriteria = (key, obj = postsObj) => {
 };
 
 const showHighestVotesRatioPostTitle = (obj = postsObj) => {
-  // let posts = [obj.posts];
-
-  // const sortedByRation = posts
-  // .sort(
-  //   (a, b) =>
-  //     b["upvotes"] - b["downvotes"] - a["upvotes"] - a["downvotes"] ||
-  //     parseDateFormat(b, "created") - parseDateFormat(a, "created")
-  // )
-  // .reduce(postTitle => postTitle = obj[0].title);
-  // return posts[0].title;
   return Object.values(
     obj.posts.sort(
       (a, b) =>
