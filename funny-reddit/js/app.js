@@ -79,9 +79,9 @@ const highestVotesRatioPost = () => {
 const filterLatestPosts = () => {
   let posts = [...postsObj.posts];
   const now = Date.now();
-  console.log(now);
+  const TWENTY_FOUR_HOURS = 86400;
 
   return posts.filter(
-    post => now - parseDateFormat(post, "created") < 24 * 60 * 60
+    post => now - parseDateFormat(post, "created") < TWENTY_FOUR_HOURS
   );
 };
