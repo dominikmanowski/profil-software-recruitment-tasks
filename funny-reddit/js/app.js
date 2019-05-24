@@ -1,10 +1,19 @@
-const URL = "https://www.reddit.com/r/funny.json";
+const INPUT_JSON_URL = "https://www.reddit.com/r/funny.json";
+const ALLOWED_ENTRIES = [
+  "title",
+  "ups",
+  "downs",
+  "score",
+  "num_comments",
+  "created"
+];
 
-const getData = async () => {
-  const response = await fetch(URL);
+let postsObj = { posts: [], count: 0 };
+
+const getData = async url => {
+  const response = await fetch(url);
   const json = await response.json();
-  const data = await json.data.children;
-  return await data;
+  return await json.data.children;
 };
 
 const renameKeys = (keysMap, obj) =>
@@ -16,31 +25,26 @@ const renameKeys = (keysMap, obj) =>
     {}
   );
 
-const formatTime = timestamp => {
-  const date = new Date(timestamp * 1000);
-  const dateLocal = date.toLocaleTimeString("pl-PL", {
+const formatTime = unixTimestamp => {
+  const date = new Date(unixTimestamp * 1000);
+  return date.toLocaleTimeString("pl-PL", {
     day: "numeric",
     month: "numeric",
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit"
   });
-  return dateLocal;
 };
 
 const parseDateFormat = (item, key) =>
   Date.parse(item[key].replace(/(\d+).(\d+)/, "$2.$1"));
 
-let postsObj = { posts: [], count: 0 };
-
-const fillPostsObj = async () => {
-  const respond = await getData();
-
-  const allowed = ["title", "ups", "downs", "score", "num_comments", "created"];
+const fillPostsObj = async (allowedEntries = ALLOWED_ENTRIES) => {
+  const respond = await getData(INPUT_JSON_URL);
 
   postsObj.posts = await respond.map(({ data }) =>
     Object.keys(data)
-      .filter(key => allowed.includes(key))
+      .filter(key => allowedEntries.includes(key))
       .reduce((obj, key) => {
         obj[key] = key !== "created" ? data[key] : formatTime(data[key]);
         return obj;
@@ -53,35 +57,42 @@ const fillPostsObj = async () => {
   postsObj.count = postsObj.posts.length;
 };
 
-fillPostsObj();
-
-const sortPostsObj = key => {
+const sortByGivenCriteria = (key, obj = postsObj) => {
   if (key === "created") {
-    postsObj.posts.sort(
+    return obj.posts.sort(
       (a, b) => parseDateFormat(a, key) - parseDateFormat(b, key)
     );
-    return;
   }
-  postsObj.posts.sort((a, b) => a[key] - b[key]);
+  return obj.posts.sort((a, b) => a[key] - b[key]);
 };
 
-const highestVotesRatioPost = () => {
-  let posts = [...postsObj.posts];
+const showHighestVotesRatioPostTitle = (obj = postsObj) => {
+  // let posts = [obj.posts];
 
-  const sortedByRation = posts.sort(
-    (a, b) =>
-      b["upvotes"] - b["downvotes"] - a["upvotes"] - a["downvotes"] ||
-      parseDateFormat(b, "created") - parseDateFormat(a, "created")
-  );
-  return posts[0].title;
+  // const sortedByRation = posts
+  // .sort(
+  //   (a, b) =>
+  //     b["upvotes"] - b["downvotes"] - a["upvotes"] - a["downvotes"] ||
+  //     parseDateFormat(b, "created") - parseDateFormat(a, "created")
+  // )
+  // .reduce(postTitle => postTitle = obj[0].title);
+  // return posts[0].title;
+  return Object.values(
+    obj.posts.sort(
+      (a, b) =>
+        b["upvotes"] - b["downvotes"] - a["upvotes"] - a["downvotes"] ||
+        parseDateFormat(b, "created") - parseDateFormat(a, "created")
+    )
+  )[0].title;
 };
 
-const filterLatestPosts = () => {
-  let posts = [...postsObj.posts];
+const showLatestPosts = (obj = postsObj) => {
   const now = Date.now();
   const TWENTY_FOUR_HOURS = 86400;
 
-  return posts.filter(
+  return obj.posts.filter(
     post => now - parseDateFormat(post, "created") < TWENTY_FOUR_HOURS
   );
 };
+
+fillPostsObj();
