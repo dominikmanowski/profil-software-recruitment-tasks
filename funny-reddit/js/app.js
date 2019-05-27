@@ -5,7 +5,7 @@ const ALLOWED_ENTRIES = [
   "downs",
   "score",
   "num_comments",
-  "created"
+  "created_utc"
 ];
 
 let postsObj = { posts: [], count: 0 };
@@ -93,7 +93,7 @@ const sortPosts = (key, obj = postsObj) => {
     obj.posts.sort((a, b) => parseDate(a, key) - parseDate(b, key));
     return sortedPostsObj;
   }
-  obj.posts.sort((a, b) => a[key] - b[key]);
+  sortedPostsObj.posts.sort((a, b) => a[criterion] - b[criterion]);
   return sortedPostsObj;
 };
 
