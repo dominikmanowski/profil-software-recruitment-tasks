@@ -97,7 +97,7 @@ const sortPosts = (key, obj = postsObj) => {
   return sortedPostsObj;
 };
 
-const showHighestVotesRatioPostTitle = (obj = postsObj) => {
+const filterHighestVotesRatioPostTitle = (obj = postsObj) => {
   return Object.values(
     obj.posts.sort(
       (a, b) =>
