@@ -47,7 +47,7 @@ To run a specific function enter in the Console:
 
 ```filterHighestVotesRatioPostTitle()``` - view title of the post with the highest ratio of upvotes and downvotes
 
-```filterLatestPosts``` - view posts from the last day (24h back)
+```filterLatestPosts()``` - view posts from the last day (24h back)
 
 ## Tests
 
