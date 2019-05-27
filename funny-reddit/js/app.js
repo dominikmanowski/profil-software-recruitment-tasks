@@ -46,6 +46,11 @@ const formatTime = unixTimeStamp => {
   return "Invalid time stamp";
 };
 
+const countPosts = obj => {
+  obj.count = obj.posts.length;
+  return obj;
+};
+
 const parseDateFormat = (item, key) =>
   Date.parse(item[key].replace(/(\d+).(\d+)/, "$2.$1"));
 
@@ -64,7 +69,7 @@ const fillPostsObj = async (allowedEntries = ALLOWED_ENTRIES) => {
 
   postsObj.posts = postsObj.posts.map(post => renameKeys(keysMap, post));
 
-  postsObj.count = postsObj.posts.length;
+  await countPosts(obj);
 
   fillPostsViewWithPosts();
 };
