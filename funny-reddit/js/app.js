@@ -87,11 +87,14 @@ const transformData = async (
   return await obj;
 };
 
-const sortByGivenCriteria = (key, obj = postsObj) => {
+const sortPosts = (key, obj = postsObj) => {
+  let sortedPostsObj = obj;
   if (key === "created") {
-    return obj.posts.sort((a, b) => parseDate(a, key) - parseDate(b, key));
+    obj.posts.sort((a, b) => parseDate(a, key) - parseDate(b, key));
+    return sortedPostsObj;
   }
-  return obj.posts.sort((a, b) => a[key] - b[key]);
+  obj.posts.sort((a, b) => a[key] - b[key]);
+  return sortedPostsObj;
 };
 
 const showHighestVotesRatioPostTitle = (obj = postsObj) => {
