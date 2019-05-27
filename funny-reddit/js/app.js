@@ -29,15 +29,21 @@ const renameKeys = (keysMap, obj) =>
     {}
   );
 
-const formatTime = unixTimestamp => {
-  const date = new Date(unixTimestamp * 1000);
-  return date.toLocaleTimeString("pl-PL", {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+const formatTime = unixTimeStamp => {
+  if (
+    typeof unixTimeStamp === "number" &&
+    unixTimeStamp.toString().length === 10
+  ) {
+    const date = new Date(unixTimeStamp * 1000);
+    return date.toLocaleTimeString("pl-PL", {
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+  return "Invalid time stamp";
 };
 
 const parseDateFormat = (item, key) =>
