@@ -54,7 +54,7 @@ const countPosts = obj => {
 const parseDate = (item, key) => {
   const TIME_ZONE_DIFFERENCE = 33;
   return (
-    Date.parse(item[key].replace(/(\d+).(\d+)/, "$2.$1")) / 1000 +
+    Date.parse(item[key].replace(/(\d+).(\d+).(\d+)/, "$3/$2/$1")) / 1000 +
     TIME_ZONE_DIFFERENCE
   );
 };
@@ -88,9 +88,11 @@ const transformData = async (
 };
 
 const sortPosts = (criterion, obj = postsObj) => {
-  let sortedPostsObj = JSON.parse(JSON.stringify(obj))
+  let sortedPostsObj = JSON.parse(JSON.stringify(obj));
   if (criterion === "created") {
-    sortedPostsObj.posts.sort((a, b) => parseDate(a, criterion) - parseDate(b, criterion));
+    sortedPostsObj.posts.sort(
+      (a, b) => parseDate(a, criterion) - parseDate(b, criterion)
+    );
     return sortedPostsObj;
   }
   sortedPostsObj.posts.sort((a, b) => a[criterion] - b[criterion]);
