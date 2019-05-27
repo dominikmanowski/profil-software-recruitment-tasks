@@ -87,10 +87,10 @@ const transformData = async (
   return await obj;
 };
 
-const sortPosts = (key, obj = postsObj) => {
-  let sortedPostsObj = obj;
-  if (key === "created") {
-    obj.posts.sort((a, b) => parseDate(a, key) - parseDate(b, key));
+const sortPosts = (criterion, obj = postsObj) => {
+  let sortedPostsObj = JSON.parse(JSON.stringify(obj))
+  if (criterion === "created") {
+    sortedPostsObj.posts.sort((a, b) => parseDate(a, criterion) - parseDate(b, criterion));
     return sortedPostsObj;
   }
   sortedPostsObj.posts.sort((a, b) => a[criterion] - b[criterion]);
