@@ -59,31 +59,37 @@ const parseDate = (item, key) => {
   );
 };
 
-const fillPostsObj = async (allowedEntries = ALLOWED_ENTRIES) => {
-  const respond = await getData(INPUT_JSON_URL);
+const transformData = async (
+  url = INPUT_JSON_URL,
+  allowedEntries = ALLOWED_ENTRIES
+) => {
+  const respond = await getData(url);
+  const obj = {};
 
-  postsObj.posts = await respond.map(({ data }) =>
+  obj.posts = await respond.map(({ data }) =>
     Object.keys(data)
       .filter(key => allowedEntries.includes(key))
       .reduce((obj, key) => {
-        obj[key] = key !== "created" ? data[key] : formatTime(data[key]);
+        obj[key] = key !== "created_utc" ? data[key] : formatTime(data[key]);
         return obj;
       }, {})
   );
-  const keysMap = { ups: "upvotes", downs: "downvotes" };
+  const keysMap = {
+    ups: "upvotes",
+    downs: "downvotes",
+    created_utc: "created"
+  };
 
-  postsObj.posts = postsObj.posts.map(post => renameKeys(keysMap, post));
+  obj.posts = await obj.posts.map(post => renameKeys(keysMap, post));
 
   await countPosts(obj);
 
-  fillPostsViewWithPosts();
+  return await obj;
 };
 
 const sortByGivenCriteria = (key, obj = postsObj) => {
   if (key === "created") {
-    return obj.posts.sort(
-      (a, b) => parseDateFormat(a, key) - parseDateFormat(b, key)
-    );
+    return obj.posts.sort((a, b) => parseDate(a, key) - parseDate(b, key));
   }
   return obj.posts.sort((a, b) => a[key] - b[key]);
 };
@@ -93,7 +99,7 @@ const showHighestVotesRatioPostTitle = (obj = postsObj) => {
     obj.posts.sort(
       (a, b) =>
         b["upvotes"] - b["downvotes"] - a["upvotes"] - a["downvotes"] ||
-        parseDateFormat(b, "created") - parseDateFormat(a, "created")
+        parseDate(b, "created") - parseDate(a, "created")
     )
   )[0].title;
 };
@@ -103,14 +109,8 @@ const showLatestPosts = (obj = postsObj) => {
   const TWENTY_FOUR_HOURS = 86400;
 
   return obj.posts.filter(
-    post => now - parseDateFormat(post, "created") < TWENTY_FOUR_HOURS
+    post => now - parseDate(post, "created") < TWENTY_FOUR_HOURS
   );
 };
 
-fillPostsObj();
-
-const postsView = document.getElementById("posts");
-
-const fillPostsViewWithPosts = () => {
-  postsView.innerHTML = JSON.stringify(postsObj, null, 2);
-};
+(async () => (postsObj = await transformData()))();
