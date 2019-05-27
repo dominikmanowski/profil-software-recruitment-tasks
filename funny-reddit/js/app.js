@@ -51,8 +51,13 @@ const countPosts = obj => {
   return obj;
 };
 
-const parseDateFormat = (item, key) =>
-  Date.parse(item[key].replace(/(\d+).(\d+)/, "$2.$1"));
+const parseDate = (item, key) => {
+  const TIME_ZONE_DIFFERENCE = 33;
+  return (
+    Date.parse(item[key].replace(/(\d+).(\d+)/, "$2.$1")) / 1000 +
+    TIME_ZONE_DIFFERENCE
+  );
+};
 
 const fillPostsObj = async (allowedEntries = ALLOWED_ENTRIES) => {
   const respond = await getData(INPUT_JSON_URL);
