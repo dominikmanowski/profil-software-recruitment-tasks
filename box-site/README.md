@@ -17,3 +17,5 @@ The task was to create an HTML + CSS website, which would be compatible with the
 ## Display solution
 
 To display the page, open the index.html file in a web browser
+
+![Solution screenshot](Screenshot.png "Solution screenshot")
