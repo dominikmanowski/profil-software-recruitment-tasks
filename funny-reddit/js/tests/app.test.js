@@ -96,6 +96,37 @@ const expectedPostsObjSortedByDownvotes = {
   count: 3
 };
 
+const expectedPostsObjSortedByScore = {
+  posts: [
+    {
+      title:
+        "Subreddit Of The Month [May 2019]: / r / CroppedNorrisJokes.Know of a small(under 20, 000 subscribers) humor - based subreddit that deserves a month in the spotlight ? Link it inside!",
+      upvotes: 342,
+      downvotes: 2,
+      score: 340,
+      num_comments: 38,
+      created: "2.05.2019, 00:17"
+    },
+    {
+      title: "This turtle is fast...!!!",
+      upvotes: 343,
+      downvotes: 3,
+      score: 340,
+      num_comments: 38,
+      created: "25.05.2019, 14:58"
+    },
+    {
+      title: "Will you please do that one petting thing on my head!!!???",
+      upvotes: 86463,
+      downvotes: 0,
+      score: 86463,
+      num_comments: 1057,
+      created: "27.05.2019, 06:40"
+    }
+  ],
+  count: 3
+};
+
 const expectedPostsObjSortedByCreate = {
   posts: [
     {
@@ -182,6 +213,10 @@ describe("sortPosts", () => {
   it("should sort object with post by downvotes", () => {
     const result = sortPosts("downvotes", expectedPostsObj);
     expect(result).isEqual(expectedPostsObjSortedByDownvotes);
+  });
+  it("should sort object with post by score", () => {
+    const result = sortPosts("score", expectedPostsObj);
+    expect(result).isEqual(expectedPostsObjSortedByScore);
   });
   it("should sort object with post by created", () => {
     const result = sortPosts("created", expectedPostsObj);
