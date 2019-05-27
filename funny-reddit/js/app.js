@@ -107,13 +107,17 @@ const filterHighestVotesRatioPostTitle = (obj = postsObj) => {
   )[0].title;
 };
 
-const showLatestPosts = (obj = postsObj) => {
-  const now = Date.now();
-  const TWENTY_FOUR_HOURS = 86400;
+const filterLatestPosts = (obj = postsObj) => {
+  const now = Date.now() / 1000;
+  const TWENTY_FOUR_HOURS = 24 * 60 * 60;
+  const filteredPosts = obj;
 
-  return obj.posts.filter(
-    post => now - parseDate(post, "created") < TWENTY_FOUR_HOURS
+  filteredPosts.posts = obj.posts.filter(
+    post => now - parseDate(post, "created") <= TWENTY_FOUR_HOURS
   );
-};
 
+  countPosts(filteredPosts);
+
+  return filteredPosts;
+};
 (async () => (postsObj = await transformData()))();
