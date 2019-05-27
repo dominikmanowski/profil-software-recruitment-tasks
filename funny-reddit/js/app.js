@@ -11,9 +11,13 @@ const ALLOWED_ENTRIES = [
 let postsObj = { posts: [], count: 0 };
 
 const getData = async url => {
-  const response = await fetch(url);
-  const json = await response.json();
-  return await json.data.children;
+  try {
+    const response = await fetch(url);
+    const json = await response.json();
+    return await json.data.children;
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 const renameKeys = (keysMap, obj) =>
@@ -55,6 +59,8 @@ const fillPostsObj = async (allowedEntries = ALLOWED_ENTRIES) => {
   postsObj.posts = postsObj.posts.map(post => renameKeys(keysMap, post));
 
   postsObj.count = postsObj.posts.length;
+
+  fillPostsViewWithPosts();
 };
 
 const sortByGivenCriteria = (key, obj = postsObj) => {
@@ -86,3 +92,9 @@ const showLatestPosts = (obj = postsObj) => {
 };
 
 fillPostsObj();
+
+const postsView = document.getElementById("posts");
+
+const fillPostsViewWithPosts = () => {
+  postsView.innerHTML = JSON.stringify(postsObj, null, 2);
+};
